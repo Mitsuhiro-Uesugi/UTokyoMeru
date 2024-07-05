@@ -11,17 +11,21 @@ type Goods struct {
 	gorm.Model
 	GoodsId    uint   `gorm:"not null"`
 	GoodsName  string `gorm:"not null"`
+	AuthorId   string `gorm:"not null"`
 	AuthorName string `gorm:"not null"`
+	Floor      uint   `gorm:"not null; default:1"`
 	Describe   string `gorm:"type:text;not null"`
 	Images     string `gorm:"type:text"`
 	Price      uint   `gorm:"not null"`
 	Location   string `gorm:"type:text"`
 	Type       string `gorm:"not null"`
+	views      uint   `gorm:"default:0"`
 }
 
 type GoodsGet struct {
 	GoodsId     uint
 	GoodsName   string
+	AuthorId    string
 	AuthorName  string
 	Describe    string
 	Images      string
@@ -31,16 +35,19 @@ type GoodsGet struct {
 	UpdatedTime time.Time
 	Avatar      string
 	Type        string
+	views       uint
 }
 
 type GoodsRequest struct {
 	GoodsName  string
+	AuthorId   string
 	AuthorName string
 	Describe   string
 	Images     string
 	Price      uint
 	Location   string
 	Type       string
+	views      uint
 }
 
 type GoodsCRUD struct{}
@@ -62,6 +69,7 @@ func (crud GoodsCRUD) CreateByObject(g *Goods) error {
 	r := &Goods{
 		GoodsId:    g.GoodsId,
 		GoodsName:  g.GoodsName,
+		AuthorId:   g.AuthorId,
 		AuthorName: g.AuthorName,
 		Describe:   g.Describe,
 		Images:     g.Images,
@@ -71,6 +79,17 @@ func (crud GoodsCRUD) CreateByObject(g *Goods) error {
 	}
 	result = db.Create(r)
 	return result.Error
+}
+
+func (crud GoodsCRUD) FindById(id uint) (*Goods, error) {
+	db, err := GetDatabaseInstance()
+	if err != nil {
+		return nil, err
+	}
+
+	var res Goods
+	result := db.First(&res, id)
+	return &res, result.Error
 }
 
 func (crud GoodsCRUD) FindAll() ([]Goods, error) {
