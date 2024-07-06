@@ -7,11 +7,6 @@ type InterfaceOfGoodsCRUD interface {
 	UpdateByObject(g *Goods) error
 	FindAllOrdered() ([]Goods, error)
 	DeleteById(GoodsId string) error
-	FuzzyGetUserByName(name string) ([]User, error)
-	GetUserByName(name string) (*User, error)
-	GetAllUser() ([]User, error)
-	GetAllUserOrdered() ([]User, error)
-	DeleteUserbyName(name string) error
 }
 
 type InterfaceOfCommentCRUD interface {
@@ -25,4 +20,9 @@ type InterfaceOfUserCRUD interface {
 	CreateByObject(u *User) error
 	GetUserByName(name string) ([]User, error)
 	UpdateByObject(u *User) error
+	GetUserById(id string) (*User, error)
+	FuzzyGetUserByName(name string) ([]User, error)
+	GetAllUser() ([]User, error)
+	GetAllUserOrdered() ([]User, error)
+	DeleteUserbyName(name string) error
 }

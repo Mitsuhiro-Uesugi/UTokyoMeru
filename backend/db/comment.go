@@ -9,28 +9,37 @@ import (
 
 type Comment struct {
 	gorm.Model
-	GoodsId  uint   `gorm:"not null"`
-	AuthorId string `gorm:"not null"`
-	Content  string `gorm:"not null"`
-	Avatar   string `gorm:"type:text"`
-	Floor    uint   `gorm:"not null"`
+	GoodsId     uint   `gorm:"not null"`
+	GoodsName   string `gorm:"not null"`
+	AuthorId    string `gorm:"not null"`
+	AuthorName  string `gorm:"not null"`
+	Content     string `gorm:"not null"`
+	Avatar      string `gorm:"type:text"`
+	ReplyTo     uint   `gorm:"default:null"`
+	Floor       uint   `gorm:"not null"`
+	IsInvisible bool   `gorm:"default:false"`
+	User        User   `gorm:"foreignKey:AuthorId,AuthorName;references:UserId,UserName"`
+	Goods       Goods  `gorm:"foreignKey:GoodsId,GoodsName;references:GoodsId,GoodsName"`
 }
 
 type CommentGet struct {
 	ID          uint
 	CreatedTime time.Time
 	UpdatedTime time.Time
-	GoodsId     uint
-	AuthorId    uint
+	GoodsId     string
+	GoodsName   string
+	AuthorId    string
+	AuthorName  string
 	Content     string
 	Avatar      string
+	ReplyTo     string
 }
 
 type CommentRequest struct {
-	GoodsId    uint
-	AuthorId   string
-	AuthorName string
-	Content    string
+	GoodsId  uint
+	AuthorId string
+	Content  string
+	ReplyTo  string
 }
 
 type CommentCRUD struct{}
@@ -97,6 +106,30 @@ func (crud CommentCRUD) FindAllByGoodsId(GoodsId uint) ([]Comment, error) {
 	}
 
 	var res []Comment
-	result := db.Where("GoodsId = ?", GoodsId).Order("Floor").Find(&res)
+	result := db.Where("GoodsId = ? AND IsInvisible = ?", GoodsId, false).Order("Floor").Find(&res)
 	return res, result.Error
+}
+func (crud CommentCRUD) FindById(id uint) (*Comment, error) {
+	db, err := GetDatabaseInstance()
+	if err != nil {
+		return nil, err
+	}
+
+	var res Comment
+	result := db.First(&res, id)
+	return &res, result.Error
+}
+
+func (crud CommentCRUD) SafeDeleteById(id uint) error {
+	result, err := crud.FindById(id)
+	if err != nil {
+		return err
+	}
+
+	result.IsInvisible = true
+	err = crud.UpdateByObject(result)
+	if err != nil {
+		return err
+	}
+	return nil
 }

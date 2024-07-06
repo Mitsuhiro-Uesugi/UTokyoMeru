@@ -9,17 +9,19 @@ import (
 
 type Goods struct {
 	gorm.Model
-	GoodsId    uint   `gorm:"not null"`
-	GoodsName  string `gorm:"not null"`
-	AuthorId   string `gorm:"not null"`
-	AuthorName string `gorm:"not null"`
-	Floor      uint   `gorm:"not null; default:1"`
-	Describe   string `gorm:"type:text;not null"`
-	Images     string `gorm:"type:text"`
-	Price      uint   `gorm:"not null"`
-	Location   string `gorm:"type:text"`
-	Type       string `gorm:"not null"`
-	views      uint   `gorm:"default:0"`
+	GoodsId     uint   `gorm:"not null"`
+	GoodsName   string `gorm:"not null"`
+	AuthorId    string `gorm:"not null"`
+	AuthorName  string `gorm:"not null"`
+	Floor       uint   `gorm:"not null; default:1"`
+	Describe    string `gorm:"type:text;not null"`
+	Images      string `gorm:"type:text"`
+	Price       uint   `gorm:"not null"`
+	Location    string `gorm:"type:text"`
+	Type        string `gorm:"not null"`
+	views       uint   `gorm:"default:0"`
+	IsInvisible bool   `gorm:"default:False"`
+	User        User   `gorm:"foreignKey:AuthorId,AuthorName;references:UserId,UserName"`
 }
 
 type GoodsGet struct {
