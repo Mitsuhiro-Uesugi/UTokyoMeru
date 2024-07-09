@@ -1,7 +1,7 @@
 package main
 
 import (
-	"UTokyoMeru/backend/router"
+	"backend/router"
 	"fmt"
 	"net/http"
 

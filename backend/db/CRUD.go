@@ -14,6 +14,8 @@ type InterfaceOfCommentCRUD interface {
 	UpdateByObject(c *Comment) error
 	DeleteById(id uint) error
 	FindAllByGoodsId(GoodsId uint) ([]Comment, error)
+	SafeDeleteById(id uint) error
+	FindById(id uint) (*Comment, error)
 }
 
 type InterfaceOfUserCRUD interface {

@@ -9,7 +9,7 @@ import (
 type User struct {
 	gorm.Model
 	UserName   string  `gorm:"not null"`
-	Password   string  `gorm:"not null"`
+	PassWord   string  `gorm:"not null"`
 	Avatar     string  `gorm:"type:text"`
 	UserId     string  `gorm:"unique;not null"` //mailaddress
 	Goods      []Goods `gorm:"foreignkey:AuthorId"`
@@ -31,7 +31,7 @@ type UserGet struct {
 
 type UserLogin struct {
 	UserId   string `json:"UserId" binding:"required"`
-	Password string `json:"Password" binding:"required"`
+	PassWord string `json:"Password" binding:"required"`
 }
 
 type UserCRUD struct{}

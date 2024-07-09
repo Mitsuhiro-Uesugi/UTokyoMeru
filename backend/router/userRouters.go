@@ -6,6 +6,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func Register(c *gin.Context) {
+	crud := &db.UserCRUD{}
+	var Register db.UserLogin
+	if err := c.ShouldBindJSON(&Register); err != nil {
+		c.JSON(500, gin.H{"err": err.Error()})
+		return
+	}
+	newuser := db.User{
+		UserName: Register.UserId,
+		PassWord: Register.PassWord,
+	}
+
+	err := crud.CreateByObject(&newuser)
+	if err != nil {
+		c.JSON(500, gin.H{"err": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "User registered successfully"})
+}
+
 func Login(c *gin.Context) {
 	crud := &db.UserCRUD{}
 	var Login db.UserLogin
@@ -14,13 +35,13 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	user, err := crud.GetUserByName(Login.UserName)
+	user, err := crud.GetUserByName(Login.UserId)
 	if err != nil {
 		c.JSON(404, gin.H{"error": "Invalid username or password"})
 		return
 	}
 
-	if user.PassWord != Login.Password {
+	if user.PassWord != Login.PassWord {
 		c.JSON(404, gin.H{"error": "Invalid username or password"})
 		return
 	}
