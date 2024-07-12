@@ -15,7 +15,7 @@ type Comment struct {
 	AuthorName  string `gorm:"not null"`
 	Content     string `gorm:"not null"`
 	Avatar      string `gorm:"type:text"`
-	ReplyTo     uint   `gorm:"default:null"`
+	ReplyTo     string `gorm:"default:null"`
 	Floor       uint   `gorm:"not null"`
 	IsInvisible bool   `gorm:"default:false"`
 	User        User   `gorm:"foreignKey:AuthorId,AuthorName;references:UserId,UserName"`
@@ -26,7 +26,7 @@ type CommentGet struct {
 	ID          uint
 	CreatedTime time.Time
 	UpdatedTime time.Time
-	GoodsId     string
+	GoodsId     uint
 	GoodsName   string
 	AuthorId    string
 	AuthorName  string
